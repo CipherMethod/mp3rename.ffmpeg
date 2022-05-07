@@ -1,0 +1,18 @@
+#!/bin/sh
+# 20190605 - Jamey Hopkins
+#            mp3rename.ffmpeg
+#	     Use FFmpeg's ffprobe to get track info and rename MP3 files.
+
+find . -iname "*.mp3" -type f > files.mp3rename
+while read LINE
+do
+echo $LINE
+   ARTIST=`ffprobe -loglevel error -show_entries format_tags=artist -of default=noprint_wrappers=1:nokey=1 "$LINE"`
+   #ALBUM=`ffprobe -loglevel error -show_entries format_tags=album -of default=noprint_wrappers=1:nokey=1 "$LINE"`
+   TITLE=`ffprobe -loglevel error -show_entries format_tags=title -of default=noprint_wrappers=1:nokey=1 "$LINE"`
+   echo "$ARTIST - $TITLE"
+   mv "$LINE" "$ARTIST - $TITLE.mp3"
+done < files.mp3rename 
+rm -f files.mp3rename
+chmod 664 *mp3
+
